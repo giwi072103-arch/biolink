@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Вход — biolink</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="glass card">
+      <div class="brand"><span class="brand__dot"></span>biolink</div>
+      <h1 class="hero" style="font-size:1.5rem">С возвращением</h1>
+      <p class="lede">Войди по логину и паролю.</p>
+
+      <div class="error-box" id="err"></div>
+
+      <form id="form">
+        <div class="field">
+          <label for="username">Логин</label>
+          <input id="username" name="username" placeholder="anvarbek" required>
+        </div>
+        <div class="field">
+          <label for="password">Пароль</label>
+          <input id="password" name="password" type="password" required>
+        </div>
+        <button class="btn btn--primary" type="submit">Войти</button>
+      </form>
+
+      <p class="hint">Ещё нет страницы? <a href="/register.html">Зарегистрироваться</a></p>
+      <p class="hint">Забыл пароль? <a href="/reset.html">Сбросить через бота</a></p>
+    </div>
+  </div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/scene.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    mountScene({ blur: 30, brightness: 0.65 });
+    mountCursorGlow();
+
+    const form = document.getElementById('form');
+    const errBox = document.getElementById('err');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errBox.classList.remove('show');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const { token } = await API.login(username, password);
+        API.setToken(token);
+        window.location.href = '/dashboard.html';
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>
